@@ -4,6 +4,8 @@ class TrelloLocators:
     LOGIN_BUTTON = "//input[@id='login']"
     LOGIN_SUBMIT = '//button[@id="login-submit"]'
     CLICK_BOARD = '//div[@id="board"]'
+    SHOW_MENU = "//span[text()='Show menu']"
+    VALIDATE_LOGIN = "//div[@class='_2JvEWwSoJlzeFr']"
 
 class BoardsLocator:
     CREATE_BOARD = "//div[@class='board-tile mod-add']"

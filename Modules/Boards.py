@@ -27,7 +27,10 @@ class Boards(Trello,BoardsLocator):
 
     def deleteBoard(self):
         try:
-            for xpath in [self.SELECT_MORE,self.SELECT_CLOSE_BOARD,self.CONFIRM_CLOSE,self.SELECT_BOARD_DELETE,self.CONFIRM_BOARD_DELETE]:
+            deleteXpathList = [self.SELECT_MORE,self.SELECT_CLOSE_BOARD,self.CONFIRM_CLOSE,self.SELECT_BOARD_DELETE,self.CONFIRM_BOARD_DELETE]
+            if self.is_visible(self.SHOW_MENU):
+                deleteXpathList.insert(0,self.SHOW_MENU)
+            for xpath in deleteXpathList:
                 self.driver.find_element_by_xpath(xpath).click()
                 time.sleep(0.5)
         except Exception as e:

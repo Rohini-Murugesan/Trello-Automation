@@ -5,11 +5,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from Config.Locators import TrelloLocators
+from Config.Constants import *
 
 
 def getChromeDriver():
     try:
-        webDriver = webdriver.Chrome('D:\chromedriver\chromedriver.exe')
+        webDriver = webdriver.Chrome(CHROME_DRIVER_PATH)
         webDriver.maximize_window()
         webDriver.implicitly_wait(15)
     except Exception as e:
@@ -30,17 +31,32 @@ class Trello(TrelloLocators):
         except Exception as e:
             print("Exception in closeDriver : ", e)
 
+    def is_visible(self, locator):
+        try:
+            Elm = WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located((By.XPATH,locator)))
+            return bool(Elm)
+        except Exception as e:
+            print("Exception in is_visible : ", e)
+
+
     def loginTrello(self):
         try:
-            self.driver.get('https://trello.com/en/login')
-            self.driver.find_element_by_xpath(self.USERNAME).send_keys('rohinimurugesan.23@gmail.com')
+            self.driver.get(TRELLO_LOGIN_URL)
+            self.driver.find_element_by_xpath(self.USERNAME).send_keys(USERNAME)
             self.driver.find_element_by_xpath(self.LOGIN_BUTTON).submit()
             time.sleep(10)  # need
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, self.PASSWORD ))
             )
-            self.driver.find_element_by_xpath(self.PASSWORD).send_keys('testtrello123')
+            self.driver.find_element_by_xpath(self.PASSWORD).send_keys(PASSWORD)
             self.driver.find_element_by_xpath(self.LOGIN_SUBMIT).submit()
+            # Validate Login
+            if self.is_visible(self.VALIDATE_LOGIN):
+                print("Login is success")
+            else:
+                print("Login failed")
         except Exception as e:
             print("Exception in loginTrello : ", e)
+        finally:
+            self.driver.save_screenshot('Login.png')
 
