@@ -2,31 +2,32 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from Modules import Trello
 
-class Boards(Trello.Trello):
+from Config.Locators import BoardsLocator
+from Modules.Trello import Trello
+
+class Boards(Trello,BoardsLocator):
     def __init__(self,driver):
         super().__init__(driver)
+        super(BoardsLocator,self).__init__()
 
     def createBoard(self,boardName):
         try:
-            self.driver.find_element_by_xpath("//div[@class='board-tile mod-add']").click()
+            self.driver.find_element_by_xpath(self.CREATE_BOARD).click()
             create_board = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, "//li[@class='_3XLlpTqqGMaaAG']/button[@title='blue']"))
+                EC.presence_of_element_located((By.XPATH, self.SELECT_BLUE_BACKGROUND))
             )
-            self.driver.find_element_by_xpath("//button[@title='blue']").click()
-            self.driver.find_element_by_xpath("//input[@placeholder='Add board title']").send_keys(boardName)
+            self.driver.find_element_by_xpath(self.BLUE_BACKGROUND).click()
+            self.driver.find_element_by_xpath(self.CREATE_BOARD_INPUT).send_keys(boardName)
             time.sleep(2)
-            self.driver.find_element_by_xpath("//button[text()='Create board']").click()
+            self.driver.find_element_by_xpath(self.CREATE_BOARD_BUTTON).click()
         except Exception as e:
             print("Exception in createBoard : ", e)
 
 
     def deleteBoard(self):
         try:
-            for xpath in ["//a[contains(text(),'More')]", "//a[contains(text(),'Close board')]",
-                          "//input[@value='Close' and contains(@class,'danger')]", "//a[@class='quiet js-delete']",
-                          "//input[@value='Delete' and contains(@class,'danger')]"]:
+            for xpath in [self.SELECT_MORE,self.SELECT_CLOSE_BOARD,self.CONFIRM_CLOSE,self.SELECT_BOARD_DELETE,self.CONFIRM_BOARD_DELETE]:
                 self.driver.find_element_by_xpath(xpath).click()
                 time.sleep(0.5)
         except Exception as e:
