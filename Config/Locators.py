@@ -35,5 +35,6 @@ class ListsLocator:
     CREATE_LIST = "//span[@class='placeholder']"
     LIST_NAME_INPUT = "//input[@class='list-name-input' and @name='name']"
     CREATE_LIST_SUBMIT = "//input[@value='Add list']"
+    VALIDATE_CREATED_LIST = '//h2[text()="{{{LISTNAME}}}"]'
 
 

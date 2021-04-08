@@ -20,9 +20,10 @@ def getChromeDriver():
 
 
 class Trello(TrelloLocators):
-    def __init__(self,driver):
+    def __init__(self,driver,path):
         super(TrelloLocators,self).__init__()
         self.driver = driver
+        self.reportPath = path
 
     def closeDriver(self):
         try:
@@ -41,6 +42,7 @@ class Trello(TrelloLocators):
 
     def loginTrello(self):
         try:
+            status = False
             self.driver.get(TRELLO_LOGIN_URL)
             self.driver.find_element_by_xpath(self.USERNAME).send_keys(USERNAME)
             self.driver.find_element_by_xpath(self.LOGIN_BUTTON).submit()
@@ -53,10 +55,12 @@ class Trello(TrelloLocators):
             # Validate Login
             if self.is_visible(self.VALIDATE_LOGIN):
                 print("Login is success")
+                status = True
             else:
                 print("Login failed")
         except Exception as e:
             print("Exception in loginTrello : ", e)
         finally:
-            self.driver.save_screenshot('Login.png')
+            self.driver.save_screenshot(self.reportPath + '\\Login.png')
+            return status
 
