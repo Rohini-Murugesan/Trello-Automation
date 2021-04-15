@@ -6,7 +6,13 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from Config.Locators import TrelloLocators
 from Config.Constants import *
+from datetime import datetime
+import os
 
+def generateReportPath(testcaseName):
+    path = DIRECTORY + "Reports\\" + datetime.now().strftime("%d_%m_%Y") + "\\" + testcaseName+ "\\" + datetime.now().strftime("%Hh_%Mm_%Ss")
+    os.makedirs(path)
+    return path
 
 def getChromeDriver():
     try:
@@ -17,7 +23,6 @@ def getChromeDriver():
         print("Exception in getChromeDriver : ", e)
     finally:
         return webDriver
-
 
 class Trello(TrelloLocators):
     def __init__(self,driver,path):
@@ -39,6 +44,19 @@ class Trello(TrelloLocators):
         except Exception as e:
             print("Exception in is_visible : ", e)
 
+    def updateTestcaseResults(self,Testcase_Results):
+        try:
+            Testcase_Results['Result'] = "FAIL" if len(
+                list(filter(lambda step: step[2] == False, Testcase_Results['Steps']))) > 0 else "PASS"
+            files = [file for file in os.listdir(self.reportPath) if (file.lower().endswith('.png'))]
+            cwd = os.getcwd()
+            os.chdir(self.reportPath)
+            files.sort(key=os.path.getmtime)
+            Testcase_Results['Images'] = files
+            os.chdir(cwd)
+            return Testcase_Results
+        except Exception as e:
+            print("Exception in updateTestcaseResults : ", e)
 
     def loginTrello(self):
         try:

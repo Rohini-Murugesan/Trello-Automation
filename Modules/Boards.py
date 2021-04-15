@@ -6,12 +6,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from Config.Locators import BoardsLocator
 from Modules.Trello import Trello
 
-class Boards(Trello,BoardsLocator):
-    def __init__(self,driver,path):
-        super().__init__(driver,path)
-        super(BoardsLocator,self).__init__()
 
-    def createBoard(self,boardName):
+class Boards(Trello, BoardsLocator):
+    def __init__(self, driver, path):
+        super().__init__(driver, path)
+        super(BoardsLocator, self).__init__()
+
+    def createBoard(self, boardName):
         try:
             status = False
             self.driver.find_element_by_xpath(self.CREATE_BOARD).click()
@@ -30,13 +31,13 @@ class Boards(Trello,BoardsLocator):
             self.driver.save_screenshot(self.reportPath + '\\createBoard.png')
             return status
 
-
     def deleteBoard(self):
         try:
             status = False
-            deleteXpathList = [self.SELECT_MORE,self.SELECT_CLOSE_BOARD,self.CONFIRM_CLOSE,self.SELECT_BOARD_DELETE,self.CONFIRM_BOARD_DELETE]
+            deleteXpathList = [self.SELECT_MORE, self.SELECT_CLOSE_BOARD, self.CONFIRM_CLOSE, self.SELECT_BOARD_DELETE,
+                               self.CONFIRM_BOARD_DELETE]
             if self.is_visible(self.SHOW_MENU):
-                deleteXpathList.insert(0,self.SHOW_MENU)
+                deleteXpathList.insert(0, self.SHOW_MENU)
             for xpath in deleteXpathList:
                 self.driver.find_element_by_xpath(xpath).click()
                 time.sleep(0.5)
@@ -47,6 +48,3 @@ class Boards(Trello,BoardsLocator):
             time.sleep(1)
             self.driver.save_screenshot(self.reportPath + '\\deleteBoard.png')
             return status
-
-
-
